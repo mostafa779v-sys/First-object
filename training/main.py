@@ -1,102 +1,106 @@
+import os
+
 from config import *
 from model import create_model
 from predict import predict_image
 from utils import (
+    load_model_weights,
     print_success,
     print_error,
-    load_model_weights
+    print_line,
 )
-
-import os
 
 
 def print_header():
-    print("=" * 50)
-    print("🧠 BrainVisionAI v1.0")
-    print("=" * 50)
 
+    print_line()
+    print("🧠 BrainVisionAI v0.2")
+    print_line()
 
-def show_system_info():
     print(f"Device      : {DEVICE}")
     print(f"Image Size  : {IMAGE_SIZE}")
-    print(f"Classes     : {len(CLASS_NAMES)}")
-    print()
+    print(f"Classes     : {CLASS_NAMES}")
+
+    print_line()
 
 
-def load_ai_model():
+def load_ai():
 
-    print("Loading AI Model...")
+    print("\nLoading AI Model...\n")
 
-    model = create_model().to(DEVICE)
+    model = create_model()
 
-    if os.path.exists(MODEL_PATH):
+    model = load_model_weights(
+        model,
+        MODEL_PATH,
+        DEVICE
+    )
 
-        model = load_model_weights(
-            model,
-            MODEL_PATH,
-            DEVICE
-        )
-
-        print_success("BrainVisionAI Ready!")
-
-    else:
-
-        print_error("Model not found!")
-        return None
+    print_success("BrainVisionAI Ready!")
 
     return model
 
 
 def predict_menu(model):
 
-    image_path = input("\nEnter MRI image path: ")
+    image_path = input("\nEnter MRI image path:\n\n")
 
     if not os.path.exists(image_path):
 
-        print_error("Image not found!")
+        print_error("Image not found.")
         return
 
     print("\nAnalyzing MRI...\n")
 
-    prediction, confidence = predict_image(
+    prediction, confidence, probabilities = predict_image(
         model,
         image_path
     )
 
-    print("=" * 50)
+    print_line()
+
     print(f"Prediction : {prediction}")
+
     print(f"Confidence : {confidence:.2f}%")
-    print("=" * 50)
+
+    print_line()
+
+    print("\nAll Probabilities:\n")
+
+    for name, value in probabilities.items():
+
+        print(f"{name:12} : {value:.2f}%")
+
+    print_line()
 
 
 def main():
 
     print_header()
 
-    show_system_info()
-
-    model = load_ai_model()
-
-    if model is None:
-        return
+    model = load_ai()
 
     while True:
 
-        print("\nChoose an option:")
+        print("\nChoose an option:\n")
+
         print("1 - Train Model")
+
         print("2 - Evaluate Model")
+
         print("3 - Predict MRI")
+
         print("4 - Exit")
 
         choice = input("\nEnter your choice: ")
 
         if choice == "1":
 
-            print("\n🚧 Training module coming soon.")
+            print("\nTraining module coming soon.")
 
         elif choice == "2":
 
-            print("\n🚧 Evaluation module coming soon.")
+            print("\nEvaluation module coming soon.")
 
         elif choice == "3":
 
@@ -105,6 +109,7 @@ def main():
         elif choice == "4":
 
             print("\nGoodbye 👋")
+
             break
 
         else:
@@ -113,4 +118,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
