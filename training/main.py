@@ -1,16 +1,18 @@
 from config import *
 from model import create_model
+from predict import predict_image
 from utils import (
     print_success,
     print_error,
-    load_model_weights,
+    load_model_weights
 )
+
 import os
 
 
 def print_header():
     print("=" * 50)
-    print("🧠 BrainVisionAI v0.2")
+    print("🧠 BrainVisionAI v1.0")
     print("=" * 50)
 
 
@@ -39,47 +41,32 @@ def load_ai_model():
 
     else:
 
-        print_error("Trained model not found!")
+        print_error("Model not found!")
+        return None
 
     return model
 
 
-def show_menu():
+def predict_menu(model):
 
-    print("\nChoose an option:")
+    image_path = input("\nEnter MRI image path: ")
 
-    print("1 - Train Model")
+    if not os.path.exists(image_path):
 
-    print("2 - Evaluate Model")
+        print_error("Image not found!")
+        return
 
-    print("3 - Predict MRI")
+    print("\nAnalyzing MRI...\n")
 
-    print("4 - Exit")
+    prediction, confidence = predict_image(
+        model,
+        image_path
+    )
 
-
-def handle_choice():
-
-    choice = input("\nEnter your choice: ")
-
-    if choice == "1":
-
-        print("\n🚧 Training module is coming soon.")
-
-    elif choice == "2":
-
-        print("\n🚧 Evaluation module is coming soon.")
-
-    elif choice == "3":
-
-        print("\n🚧 Prediction module will be connected next.")
-
-    elif choice == "4":
-
-        print("\nGoodbye!")
-
-    else:
-
-        print_error("Invalid choice.")
+    print("=" * 50)
+    print(f"Prediction : {prediction}")
+    print(f"Confidence : {confidence:.2f}%")
+    print("=" * 50)
 
 
 def main():
@@ -88,11 +75,41 @@ def main():
 
     show_system_info()
 
-    load_ai_model()
+    model = load_ai_model()
 
-    show_menu()
+    if model is None:
+        return
 
-    handle_choice()
+    while True:
+
+        print("\nChoose an option:")
+        print("1 - Train Model")
+        print("2 - Evaluate Model")
+        print("3 - Predict MRI")
+        print("4 - Exit")
+
+        choice = input("\nEnter your choice: ")
+
+        if choice == "1":
+
+            print("\n🚧 Training module coming soon.")
+
+        elif choice == "2":
+
+            print("\n🚧 Evaluation module coming soon.")
+
+        elif choice == "3":
+
+            predict_menu(model)
+
+        elif choice == "4":
+
+            print("\nGoodbye 👋")
+            break
+
+        else:
+
+            print_error("Invalid choice.")
 
 
 if __name__ == "__main__":
