@@ -1,11 +1,19 @@
 import torch
+
 from sklearn.metrics import (
     accuracy_score,
-    confusion_matrix,
-    classification_report
+    classification_report,
+    confusion_matrix
 )
 
-def evaluate(model, test_loader, device, class_names):
+from config import DEVICE, CLASS_NAMES
+
+
+def evaluate(model, test_loader):
+
+    """
+    Evaluate trained model on test dataset.
+    """
 
     model.eval()
 
@@ -16,8 +24,8 @@ def evaluate(model, test_loader, device, class_names):
 
         for images, labels in test_loader:
 
-            images = images.to(device)
-            labels = labels.to(device)
+            images = images.to(DEVICE)
+            labels = labels.to(DEVICE)
 
             outputs = model(images)
 
@@ -26,15 +34,31 @@ def evaluate(model, test_loader, device, class_names):
             y_true.extend(labels.cpu().numpy())
             y_pred.extend(predicted.cpu().numpy())
 
-    accuracy = accuracy_score(y_true, y_pred)
+    accuracy = accuracy_score(
+        y_true,
+        y_pred
+    )
 
-    print(f"Test Accuracy: {accuracy*100:.2f}%")
+    print("\n" + "=" * 50)
+    print("🧠 BrainVisionAI Evaluation")
+    print("=" * 50)
+
+    print(f"\nOverall Accuracy : {accuracy*100:.2f}%")
 
     print("\nClassification Report\n")
-    print(classification_report(
-        y_true,
-        y_pred,
-        target_names=class_names
-    ))
 
-    return confusion_matrix(y_true, y_pred)
+    print(
+        classification_report(
+            y_true,
+            y_pred,
+            target_names=CLASS_NAMES,
+            digits=4
+        )
+    )
+
+    cm = confusion_matrix(
+        y_true,
+        y_pred
+    )
+
+    return accuracy, cm
