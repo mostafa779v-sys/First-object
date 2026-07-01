@@ -1,10 +1,8 @@
+import os
 import cv2
 import numpy as np
-import torch
 
-from PIL import Image
 from torchvision import transforms
-
 from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.image import show_cam_on_image
 
@@ -18,32 +16,39 @@ transform = transforms.Compose([
 ])
 
 
-def generate_gradcam(model, image_path):
+def generate_gradcam(model, image_path, save_path="../results/gradcam_result.jpg"):
 
     image = load_image(image_path)
 
-    rgb = np.array(image.resize((IMAGE_SIZE, IMAGE_SIZE))) / 255.0
+    rgb_image = np.array(
+        image.resize((IMAGE_SIZE, IMAGE_SIZE))
+    ).astype(np.float32) / 255.0
 
     input_tensor = transform(image).unsqueeze(0).to(DEVICE)
 
-    target_layer = model.blocks[-1]
+    target_layers = [model.blocks[-1]]
 
     cam = GradCAM(
         model=model,
-        target_layers=[target_layer]
+        target_layers=target_layers
     )
 
     grayscale_cam = cam(input_tensor=input_tensor)[0]
 
-    visualization = show_cam_on_image(
-        rgb,
+    result = show_cam_on_image(
+        rgb_image,
         grayscale_cam,
         use_rgb=True
     )
 
-    visualization = cv2.cvtColor(
-        visualization,
-        cv2.COLOR_RGB2BGR
+    os.makedirs(
+        os.path.dirname(save_path),
+        exist_ok=True
     )
 
-    return visualization
+    cv2.imwrite(
+        save_path,
+        cv2.cvtColor(result, cv2.COLOR_RGB2BGR)
+    )
+
+    return save_path
