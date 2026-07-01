@@ -1,18 +1,15 @@
 """
 ====================================================
 BrainVisionAI
-Canvas Engine
+Professional Canvas Engine
 ====================================================
 """
 
 import os
 
 from PIL import (
-
     Image,
-
     ImageDraw
-
 )
 
 from . import theme
@@ -44,27 +41,163 @@ class ReportCanvas:
 
         )
 
-    # ======================================
+    # =================================================
 
-    def save(
+    def save(self, path):
 
-        self,
+        folder = os.path.dirname(path)
 
-        path
+        if folder:
 
-    ):
+            os.makedirs(
 
-        os.makedirs(
+                folder,
 
-            os.path.dirname(path),
+                exist_ok=True
 
-            exist_ok=True
-
-        )
+            )
 
         self.image.save(path)
 
-    # ======================================
+    # =================================================
+
+    def rectangle(
+
+        self,
+
+        x,
+
+        y,
+
+        width,
+
+        height,
+
+        color
+
+    ):
+
+        self.draw.rectangle(
+
+            (
+
+                x,
+
+                y,
+
+                x + width,
+
+                y + height
+
+            ),
+
+            fill=color
+
+        )
+
+    # =================================================
+
+    def rounded_box(
+
+        self,
+
+        x,
+
+        y,
+
+        width,
+
+        height,
+
+        fill=theme.CARD,
+
+        outline=theme.BORDER,
+
+        radius=None,
+
+        border_width=2
+
+    ):
+
+        if radius is None:
+
+            radius = theme.CARD_RADIUS
+
+        self.draw.rounded_rectangle(
+
+            (
+
+                x,
+
+                y,
+
+                x + width,
+
+                y + height
+
+            ),
+
+            radius=radius,
+
+            fill=fill,
+
+            outline=outline,
+
+            width=border_width
+
+        )
+
+    # =================================================
+
+    def shadow_box(
+
+        self,
+
+        x,
+
+        y,
+
+        width,
+
+        height,
+
+        shadow=5
+
+    ):
+
+        self.draw.rounded_rectangle(
+
+            (
+
+                x + shadow,
+
+                y + shadow,
+
+                x + width + shadow,
+
+                y + height + shadow
+
+            ),
+
+            radius=theme.CARD_RADIUS,
+
+            fill=(210,210,210)
+
+        )
+
+        self.rounded_box(
+
+            x,
+
+            y,
+
+            width,
+
+            height
+
+        )
+
+    # =================================================
 
     def line(
 
@@ -104,7 +237,45 @@ class ReportCanvas:
 
         )
 
-    # ======================================
+    # =================================================
+
+    def circle(
+
+        self,
+
+        x,
+
+        y,
+
+        radius,
+
+        fill,
+
+        outline=None
+
+    ):
+
+        self.draw.ellipse(
+
+            (
+
+                x,
+
+                y,
+
+                x + radius * 2,
+
+                y + radius * 2
+
+            ),
+
+            fill=fill,
+
+            outline=outline
+
+        )
+
+    # =================================================
 
     def text(
 
@@ -118,7 +289,9 @@ class ReportCanvas:
 
         font,
 
-        color=theme.BLACK
+        color=theme.BLACK,
+
+        anchor=None
 
     ):
 
@@ -136,91 +309,67 @@ class ReportCanvas:
 
             fill=color,
 
+            font=font,
+
+            anchor=anchor
+
+        )
+
+    # =================================================
+
+    def centered_text(
+
+        self,
+
+        x,
+
+        y,
+
+        width,
+
+        value,
+
+        font,
+
+        color=theme.BLACK
+
+    ):
+
+        bbox = self.draw.textbbox(
+
+            (
+
+                0,
+
+                0
+
+            ),
+
+            str(value),
+
             font=font
 
         )
 
-    # ======================================
+        text_width = bbox[2] - bbox[0]
 
-    def rounded_box(
+        xx = x + (width - text_width) // 2
 
-        self,
+        self.text(
 
-        x,
+            xx,
 
-        y,
+            y,
 
-        w,
+            value,
 
-        h,
+            font,
 
-        fill=theme.CARD,
-
-        outline=theme.BORDER
-
-    ):
-
-        self.draw.rounded_rectangle(
-
-            (
-
-                x,
-
-                y,
-
-                x+w,
-
-                y+h
-
-            ),
-
-            radius=theme.CARD_RADIUS,
-
-            fill=fill,
-
-            outline=outline,
-
-            width=theme.CARD_BORDER
+            color
 
         )
 
-    # ======================================
-
-    def rectangle(
-
-        self,
-
-        x,
-
-        y,
-
-        w,
-
-        h,
-
-        color
-
-    ):
-
-        self.draw.rectangle(
-
-            (
-
-                x,
-
-                y,
-
-                x+w,
-
-                y+h
-
-            ),
-
-            fill=color
-
-        )
-
-    # ======================================
+    # =================================================
 
     def paste_image(
 
@@ -232,23 +381,79 @@ class ReportCanvas:
 
         y,
 
-        w,
+        width,
 
-        h
+        height,
+
+        keep_ratio=True
 
     ):
 
-        image = image.resize(
+        if isinstance(
 
-            (
+            image,
 
-                w,
+            str
 
-                h
+        ):
+
+            image = Image.open(
+
+                image
+
+            ).convert(
+
+                "RGB"
 
             )
 
-        )
+        else:
+
+            image = image.copy()
+
+        if keep_ratio:
+
+            image.thumbnail(
+
+                (
+
+                    width,
+
+                    height
+
+                )
+
+            )
+
+        else:
+
+            image = image.resize(
+
+                (
+
+                    width,
+
+                    height
+
+                )
+
+            )
+
+        offset_x = (
+
+            width -
+
+            image.width
+
+        ) // 2
+
+        offset_y = (
+
+            height -
+
+            image.height
+
+        ) // 2
 
         self.image.paste(
 
@@ -256,17 +461,17 @@ class ReportCanvas:
 
             (
 
-                x,
+                x + offset_x,
 
-                y
+                y + offset_y
 
             )
 
         )
 
-    # ======================================
+    # =================================================
 
-    def shadow_box(
+    def horizontal_progress(
 
         self,
 
@@ -274,29 +479,29 @@ class ReportCanvas:
 
         y,
 
-        w,
+        width,
 
-        h
+        height,
+
+        percentage,
+
+        background=(230,230,230),
+
+        foreground=theme.SECONDARY
 
     ):
 
-        self.draw.rounded_rectangle(
+        percentage = max(
 
-            (
+            0,
 
-                x+4,
+            min(
 
-                y+4,
+                100,
 
-                x+w+4,
+                percentage
 
-                y+h+4
-
-            ),
-
-            radius=theme.CARD_RADIUS,
-
-            fill=(220,220,220)
+            )
 
         )
 
@@ -306,8 +511,48 @@ class ReportCanvas:
 
             y,
 
-            w,
+            width,
 
-            h
+            height,
+
+            fill=background,
+
+            outline=background,
+
+            radius=height//2,
+
+            border_width=0
 
         )
+
+        filled = int(
+
+            width *
+
+            percentage /
+
+            100
+
+        )
+
+        if filled > 0:
+
+            self.rounded_box(
+
+                x,
+
+                y,
+
+                filled,
+
+                height,
+
+                fill=foreground,
+
+                outline=foreground,
+
+                radius=height//2,
+
+                border_width=0
+
+            )
