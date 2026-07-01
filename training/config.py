@@ -24,7 +24,7 @@ CLASS_NAMES = [
 # Paths
 # ==========================
 
-MODEL_PATH = "/content/BrainVisionAI/models/BrainVisionAI_v1.pth"
+MODEL_PATH = "../models/BrainVisionAI_v1.pth"
 
 # ==========================
 # Training Settings
