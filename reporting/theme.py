@@ -1,7 +1,8 @@
 """
 ====================================================
 BrainVisionAI
-Reporting Theme
+Professional Reporting Theme
+v0.6
 ====================================================
 """
 
@@ -13,15 +14,19 @@ from PIL import ImageFont
 
 WHITE = (255, 255, 255)
 
-BLACK = (20, 20, 20)
+BLACK = (25, 25, 25)
 
-LIGHT_GRAY = (240, 240, 240)
+BACKGROUND = (246, 248, 252)
 
-GRAY = (170, 170, 170)
+CARD = (255, 255, 255)
 
-DARK_GRAY = (70, 70, 70)
+BORDER = (218, 222, 230)
 
-PRIMARY = (24, 73, 125)
+LIGHT_GRAY = (150, 150, 150)
+
+GRAY = (110, 110, 110)
+
+PRIMARY = (25, 70, 135)
 
 SECONDARY = (52, 152, 219)
 
@@ -29,73 +34,69 @@ SUCCESS = (39, 174, 96)
 
 WARNING = (243, 156, 18)
 
-DANGER = (192, 57, 43)
-
-BORDER = (220, 220, 220)
-
-BACKGROUND = (248, 249, 252)
-
-CARD = (255, 255, 255)
+DANGER = (220, 53, 69)
 
 # ==================================================
-# Report Size
+# Report Resolution
 # ==================================================
 
-PAGE_WIDTH = 1600
+# High Resolution (Almost A4 @300 DPI)
 
-PAGE_HEIGHT = 1250
+PAGE_WIDTH = 3200
 
-HEADER_HEIGHT = 120
+PAGE_HEIGHT = 2400
 
-FOOTER_HEIGHT = 60
+HEADER_HEIGHT = 180
 
-MARGIN = 40
+FOOTER_HEIGHT = 100
 
-CARD_RADIUS = 20
+MARGIN = 80
 
-CARD_BORDER = 2
+CARD_RADIUS = 35
 
-# ==================================================
-# Image Panels
-# ==================================================
-
-IMAGE_WIDTH = 650
-
-IMAGE_HEIGHT = 650
-
-IMAGE_PADDING = 10
+CARD_BORDER = 3
 
 # ==================================================
-# Fonts
+# Images
+# ==================================================
+
+IMAGE_WIDTH = 1100
+
+IMAGE_HEIGHT = 1100
+
+IMAGE_PADDING = 25
+
+# ==================================================
+# Font Loader
 # ==================================================
 
 def load_font(size, bold=False):
 
-    paths = [
+    if bold:
 
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        candidates = [
 
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
 
-        "arialbd.ttf",
+            "arialbd.ttf",
 
-        "arial.ttf"
+            "/Library/Fonts/Arial Bold.ttf"
 
-    ]
+        ]
 
-    if not bold:
+    else:
 
-        paths = [
+        candidates = [
 
             "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
 
             "arial.ttf",
 
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+            "/Library/Fonts/Arial.ttf"
 
         ]
 
-    for path in paths:
+    for path in candidates:
 
         try:
 
@@ -107,16 +108,40 @@ def load_font(size, bold=False):
 
     return ImageFont.load_default()
 
-TITLE_FONT = load_font(42, True)
+# ==================================================
+# Fonts
+# ==================================================
 
-HEADER_FONT = load_font(28, True)
+TITLE_FONT = load_font(82, True)
 
-SECTION_FONT = load_font(22, True)
+HEADER_FONT = load_font(54, True)
 
-TEXT_FONT = load_font(20)
+SECTION_FONT = load_font(42, True)
 
-SMALL_FONT = load_font(16)
+BIG_FONT = load_font(70, True)
 
-BIG_FONT = load_font(36, True)
+TEXT_FONT = load_font(34)
 
-PERCENT_FONT = load_font(30, True)
+SMALL_FONT = load_font(28)
+
+PERCENT_FONT = load_font(52, True)
+
+TINY_FONT = load_font(24)
+
+# ==================================================
+# Layout
+# ==================================================
+
+SHADOW_OFFSET = 8
+
+CARD_PADDING = 35
+
+LINE_SPACING = 12
+
+SECTION_SPACING = 45
+
+IMAGE_CORNER_RADIUS = 18
+
+BAR_HEIGHT = 34
+
+BAR_RADIUS = 17
