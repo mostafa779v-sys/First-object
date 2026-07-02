@@ -1,9 +1,11 @@
 """
 ====================================================
 BrainVisionAI
-Header Component
+Professional Header
 ====================================================
 """
+
+from datetime import datetime
 
 from . import theme
 
@@ -16,7 +18,7 @@ class Header:
 
         canvas,
 
-        version="v0.5"
+        version="v0.6"
 
     ):
 
@@ -24,7 +26,13 @@ class Header:
 
         self.version = version
 
+    # =====================================================
+
     def draw(self):
+
+        # ==========================================
+        # Background
+        # ==========================================
 
         self.canvas.rectangle(
 
@@ -40,13 +48,35 @@ class Header:
 
         )
 
+        # ==========================================
+        # Logo
+        # ==========================================
+
         self.canvas.text(
 
-            35,
+            80,
 
-            28,
+            45,
 
-            "🧠 BrainVisionAI",
+            "🧠",
+
+            theme.BIG_FONT,
+
+            theme.WHITE
+
+        )
+
+        # ==========================================
+        # Product Name
+        # ==========================================
+
+        self.canvas.text(
+
+            170,
+
+            40,
+
+            "BrainVisionAI",
 
             theme.TITLE_FONT,
 
@@ -56,13 +86,33 @@ class Header:
 
         self.canvas.text(
 
-            1180,
+            175,
 
-            35,
+            108,
 
-            "AI Diagnostic Report",
+            "Artificial Intelligence MRI Analysis System",
 
-            theme.SECTION_FONT,
+            theme.SMALL_FONT,
+
+            (230,230,230)
+
+        )
+
+        # ==========================================
+        # Right Side
+        # ==========================================
+
+        right = theme.PAGE_WIDTH - 650
+
+        self.canvas.text(
+
+            right,
+
+            42,
+
+            "MRI Diagnostic Report",
+
+            theme.HEADER_FONT,
 
             theme.WHITE
 
@@ -70,17 +120,39 @@ class Header:
 
         self.canvas.text(
 
-            1180,
+            right,
 
-            70,
+            102,
 
-            f"Version : {self.version}",
+            f"Software Version : {self.version}",
 
             theme.SMALL_FONT,
 
             theme.WHITE
 
         )
+
+        self.canvas.text(
+
+            right,
+
+            138,
+
+            datetime.now().strftime(
+
+                "%Y-%m-%d %H:%M"
+
+            ),
+
+            theme.SMALL_FONT,
+
+            theme.WHITE
+
+        )
+
+        # ==========================================
+        # Bottom Line
+        # ==========================================
 
         self.canvas.line(
 
@@ -94,6 +166,6 @@ class Header:
 
             theme.SECONDARY,
 
-            3
+            6
 
         )
