@@ -415,7 +415,7 @@ def draw_diagnosis_card(
 
     cy += 30
 
-    )
+    
 
     # -----------------------------
     # AI Explanation
@@ -734,3 +734,64 @@ def draw_diagnosis_card(
         fill=LIGHT_GRAY
 
     )
+# =====================================================
+# Diagnosis Card Wrapper
+# =====================================================
+
+class DiagnosisCard:
+
+    def __init__(
+
+        self,
+
+        canvas,
+
+        diagnosis,
+
+        confidence,
+
+        x=1850,
+
+        y=230,
+
+        width=1250,
+
+        height=1050
+
+    ):
+
+        self.canvas = canvas
+
+        self.diagnosis = diagnosis
+
+        self.confidence = confidence
+
+        self.x = x
+
+        self.y = y
+
+        self.width = width
+
+        self.height = height
+
+    # =================================================
+
+    def draw(self):
+
+        draw_diagnosis_card(
+
+            self.canvas.draw,
+
+            self.x,
+
+            self.y,
+
+            self.width,
+
+            self.height,
+
+            self.diagnosis,
+
+            self.confidence
+
+        )
