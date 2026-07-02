@@ -1,7 +1,7 @@
 """
 ====================================================
 BrainVisionAI
-Metadata Component
+Professional Metadata Section
 ====================================================
 """
 
@@ -11,10 +11,6 @@ from . import theme
 
 
 class MetadataSection:
-
-    """
-    Draw report metadata.
-    """
 
     def __init__(
 
@@ -42,7 +38,7 @@ class MetadataSection:
 
         self.image_size = image_size
 
-    # =====================================================
+    # =================================================
 
     def draw_item(
 
@@ -66,9 +62,9 @@ class MetadataSection:
 
             title,
 
-            theme.SECTION_FONT,
+            theme.SMALL_FONT,
 
-            theme.PRIMARY
+            theme.GRAY
 
         )
 
@@ -76,9 +72,9 @@ class MetadataSection:
 
             x,
 
-            y + 35,
+            y + 42,
 
-            value,
+            str(value),
 
             theme.TEXT_FONT,
 
@@ -86,29 +82,83 @@ class MetadataSection:
 
         )
 
-    # =====================================================
+    # =================================================
 
     def draw(self):
 
-        y = 1140
+        x = 80
 
-        self.canvas.line(
+        y = 2120
 
-            40,
+        width = theme.PAGE_WIDTH - 160
 
-            y - 20,
+        height = 180
 
-            1560,
+        # ------------------------------------------
+        # Card
+        # ------------------------------------------
 
-            y - 20
+        self.canvas.shadow_box(
+
+            x,
+
+            y,
+
+            width,
+
+            height
 
         )
 
-        self.draw_item(
+        self.canvas.rounded_box(
 
-            50,
+            x,
 
             y,
+
+            width,
+
+            height
+
+        )
+
+        self.canvas.text(
+
+            x + 35,
+
+            y + 22,
+
+            "Model Information",
+
+            theme.HEADER_FONT,
+
+            theme.PRIMARY
+
+        )
+
+        self.canvas.line(
+
+            x + 30,
+
+            y + 75,
+
+            x + width - 30,
+
+            y + 75,
+
+            theme.BORDER,
+
+            2
+
+        )
+
+        info_y = y + 95
+
+        self.draw_item(
+
+            x + 40,
+
+            info_y,
 
             "Model",
 
@@ -118,9 +168,9 @@ class MetadataSection:
 
         self.draw_item(
 
-            350,
+            x + 500,
 
-            y,
+            info_y,
 
             "Version",
 
@@ -130,9 +180,9 @@ class MetadataSection:
 
         self.draw_item(
 
-            650,
+            x + 900,
 
-            y,
+            info_y,
 
             "Device",
 
@@ -142,21 +192,21 @@ class MetadataSection:
 
         self.draw_item(
 
-            900,
+            x + 1300,
 
-            y,
+            info_y,
 
-            "Image Size",
+            "Input Size",
 
-            f"{self.image_size} x {self.image_size}"
+            f"{self.image_size} × {self.image_size}"
 
         )
 
         self.draw_item(
 
-            1220,
+            x + 1850,
 
-            y,
+            info_y,
 
             "Generated",
 
