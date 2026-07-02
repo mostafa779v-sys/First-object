@@ -87,13 +87,13 @@ class ProbabilityChart(Chart):
 
         probabilities,
 
-        x=820,
+        x=1850,
 
-        y=880,
+        y=1350,
 
-        width=730,
+        width=1250,
 
-        height=250
+        height=700
 
     ):
 
@@ -109,11 +109,23 @@ class ProbabilityChart(Chart):
 
             height,
 
-            "Class Probabilities"
+            "Prediction Probabilities"
 
         )
 
-        self.probabilities = probabilities
+        self.probabilities = dict(
+
+            sorted(
+
+                probabilities.items(),
+
+                key=lambda x: x[1],
+
+                reverse=True
+
+            )
+
+        )
 
     # ==============================================
 
@@ -137,61 +149,47 @@ class ProbabilityChart(Chart):
 
     # ==============================================
 
-    def progress_bar(
+    def draw_background(self):
 
-        self,
+        self.canvas.shadow_box(
 
-        x,
+            self.x,
 
-        y,
+            self.y,
 
-        width,
+            self.width,
 
-        percent,
-
-        color
-
-    ):
-
-        self.canvas.rounded_box(
-
-            x,
-
-            y,
-
-            width,
-
-            22,
-
-            fill=(235,235,235),
-
-            outline=(235,235,235)
+            self.height
 
         )
 
-        filled = int(
+        self.canvas.text(
 
-            width *
+            self.x + 40,
 
-            percent /
+            self.y + 35,
 
-            100
+            self.title,
+
+            theme.HEADER_FONT,
+
+            theme.PRIMARY
 
         )
 
-        self.canvas.rounded_box(
+        self.canvas.line(
 
-            x,
+            self.x + 35,
 
-            y,
+            self.y + 95,
 
-            filled,
+            self.x + self.width - 35,
 
-            22,
+            self.y + 95,
 
-            fill=color,
+            theme.BORDER,
 
-            outline=color
+            2
 
         )
 
@@ -201,7 +199,15 @@ class ProbabilityChart(Chart):
 
         self.draw_background()
 
-        yy = self.y + 65
+        start_y = self.y + 150
+
+        bar_width = 700
+
+        bar_height = 32
+
+        spacing = 110
+
+        rank = 1
 
         for name, value in self.probabilities.items():
 
@@ -209,11 +215,11 @@ class ProbabilityChart(Chart):
 
             self.canvas.text(
 
-                self.x + 25,
+                self.x + 40,
 
-                yy,
+                start_y,
 
-                name,
+                f"{rank}. {name.upper()}",
 
                 theme.TEXT_FONT,
 
@@ -221,25 +227,27 @@ class ProbabilityChart(Chart):
 
             )
 
-            self.progress_bar(
+            self.canvas.horizontal_progress(
 
-                self.x + 190,
+                self.x + 320,
 
-                yy,
+                start_y + 5,
 
-                360,
+                bar_width,
+
+                bar_height,
 
                 value,
 
-                color
+                foreground=color
 
             )
 
             self.canvas.text(
 
-                self.x + 580,
+                self.x + 1070,
 
-                yy,
+                start_y,
 
                 f"{value:.2f}%",
 
@@ -249,7 +257,8 @@ class ProbabilityChart(Chart):
 
             )
 
-            yy += 42
+            start_y += spacing
+            rank += 1
 
 
 # ==================================================
