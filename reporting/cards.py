@@ -477,8 +477,8 @@ def draw_diagnosis_card(
     cy += 165
 
 
-    # -----------------------------
-    # Clinical Note
+     # -----------------------------
+    # Clinical Recommendation
     # -----------------------------
 
     draw.text(
@@ -494,7 +494,6 @@ def draw_diagnosis_card(
     )
 
     cy += 38
-
 
     recommendation = (
 
@@ -524,11 +523,12 @@ def draw_diagnosis_card(
 
         font=FONT_SMALL,
 
-        fill=(90,90,90),
+        fill=(90, 90, 90),
 
         line_spacing=8
 
     )
+
     cy += 120
 
     # -----------------------------
@@ -657,7 +657,7 @@ def draw_diagnosis_card(
 
         font=FONT_SMALL,
 
-        fill=(120,120,120),
+        fill=(120, 120, 120),
 
         line_spacing=8
 
@@ -733,7 +733,7 @@ def draw_diagnosis_card(
 
         fill=LIGHT_GRAY
 
-    )
+    )   
 # =====================================================
 # Diagnosis Card Wrapper
 # =====================================================
