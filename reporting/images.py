@@ -1,45 +1,73 @@
 """
 ====================================================
 BrainVisionAI
-Image Components
+Professional Image Components
 ====================================================
 """
 
-from PIL import Image
+from PIL import (
+    Image,
+    ImageOps
+)
 
 from . import theme
 
 
+# =====================================================
+# Image Panel
+# =====================================================
+
 class ImagePanel:
 
     def __init__(
+
         self,
+
         canvas,
+
         image,
+
         title,
+
         x,
+
         y,
+
         width=theme.IMAGE_WIDTH,
+
         height=theme.IMAGE_HEIGHT
+
     ):
 
         self.canvas = canvas
+
         self.image = image
+
         self.title = title
 
         self.x = x
+
         self.y = y
 
         self.width = width
+
         self.height = height
 
-    # =========================================
+    # =================================================
 
     def _prepare_image(self):
 
         if isinstance(self.image, str):
 
-            img = Image.open(self.image).convert("RGB")
+            img = Image.open(
+
+                self.image
+
+            ).convert(
+
+                "RGB"
+
+            )
 
         else:
 
@@ -49,23 +77,25 @@ class ImagePanel:
 
             (
 
-                self.width -
+                self.width - 80,
 
-                theme.IMAGE_PADDING * 2,
+                self.height - 130
 
-                self.height -
+            ),
 
-                theme.IMAGE_PADDING * 2
-
-            )
+            Image.Resampling.LANCZOS
 
         )
 
         return img
 
-    # =========================================
+    # =================================================
 
     def draw(self):
+
+        # ---------------------------------------------
+        # Shadow
+        # ---------------------------------------------
 
         self.canvas.shadow_box(
 
@@ -79,13 +109,81 @@ class ImagePanel:
 
         )
 
+        # ---------------------------------------------
+        # Card
+        # ---------------------------------------------
+
+        self.canvas.rounded_box(
+
+            self.x,
+
+            self.y,
+
+            self.width,
+
+            self.height
+
+        )
+
+        # ---------------------------------------------
+        # Card Title
+        # ---------------------------------------------
+
+        self.canvas.text(
+
+            self.x + 35,
+
+            self.y + 25,
+
+            self.title,
+
+            theme.SECTION_FONT,
+
+            theme.PRIMARY
+
+        )
+
+        # ---------------------------------------------
+        # Divider
+        # ---------------------------------------------
+
+        self.canvas.line(
+
+            self.x + 30,
+
+            self.y + 85,
+
+            self.x + self.width - 30,
+
+            self.y + 85,
+
+            theme.BORDER,
+
+            2
+
+        )
+
+        # ---------------------------------------------
+        # Image
+        # ---------------------------------------------
+
         img = self._prepare_image()
+
+        frame = ImageOps.expand(
+
+            img,
+
+            border=4,
+
+            fill=theme.BORDER
+
+        )
 
         offset_x = (
 
             self.width -
 
-            img.width
+            frame.width
 
         ) // 2
 
@@ -93,43 +191,75 @@ class ImagePanel:
 
             self.height -
 
-            img.height
+            frame.height
 
-        ) // 2
+        ) // 2 + 35
 
         self.canvas.image.paste(
 
-            img,
+            frame,
 
             (
 
-                self.x +
+                self.x + offset_x,
 
-                offset_x,
-
-                self.y +
-
-                offset_y
+                self.y + offset_y
 
             )
 
         )
 
-        self.canvas.text(
+        # ---------------------------------------------
+        # Bottom Information
+        # ---------------------------------------------
 
-            self.x,
+        info_y = self.y + self.height - 55
 
-            self.y - 40,
+        self.canvas.line(
 
-            self.title,
+            self.x + 30,
 
-            theme.HEADER_FONT,
+            info_y - 18,
 
-            theme.PRIMARY
+            self.x + self.width - 30,
+
+            info_y - 18,
+
+            theme.BORDER,
+
+            2
 
         )
 
+        self.canvas.text(
 
+            self.x + 35,
+
+            info_y,
+
+            f"Resolution : {img.width} × {img.height}",
+
+            theme.SMALL_FONT,
+
+            theme.GRAY
+
+        )
+
+        self.canvas.text(
+
+            self.x + self.width - 280,
+
+            info_y,
+
+            "BrainVisionAI",
+
+            theme.SMALL_FONT,
+
+            theme.SECONDARY
+
+        )
+        # =====================================================
+# MRI Section
 # =====================================================
 
 class MRISection:
@@ -137,7 +267,7 @@ class MRISection:
     """
     Draw Original MRI
     +
-    GradCAM
+    Grad-CAM
     """
 
     def __init__(
@@ -158,38 +288,76 @@ class MRISection:
 
         self.gradcam = gradcam_image
 
-    # =========================================
+    # =================================================
 
     def draw(self):
 
-        left = ImagePanel(
+        top = theme.HEADER_HEIGHT + 70
+
+        left_margin = 80
+
+        gap = 80
+
+        panel_width = theme.IMAGE_WIDTH
+
+        panel_height = theme.IMAGE_HEIGHT
+
+        original_panel = ImagePanel(
 
             self.canvas,
 
             self.original,
 
-            "Original MRI",
+            "Original MRI Scan",
 
-            70,
+            left_margin,
 
-            170
+            top,
+
+            panel_width,
+
+            panel_height
 
         )
 
-        right = ImagePanel(
+        gradcam_panel = ImagePanel(
 
             self.canvas,
 
             self.gradcam,
 
-            "Grad-CAM",
+            "Grad-CAM Visualization",
 
-            880,
+            left_margin + panel_width + gap,
 
-            170
+            top,
+
+            panel_width,
+
+            panel_height
 
         )
 
-        left.draw()
+        original_panel.draw()
 
-        right.draw()
+        gradcam_panel.draw()
+        # =====================================================
+# Future Extension
+# =====================================================
+
+class ComparisonSection:
+
+    """
+    Reserved for future versions.
+
+    v0.7:
+        Before / After MRI
+
+    v0.8:
+        Multiple MRI slices
+
+    v1.0:
+        Automatic lesion comparison
+    """
+
+    pass
