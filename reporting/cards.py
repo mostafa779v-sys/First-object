@@ -529,7 +529,7 @@ def draw_diagnosis_card(
         line_spacing=8
 
     )
-        cy += 120
+    cy += 120
 
     # -----------------------------
     # AI Summary
